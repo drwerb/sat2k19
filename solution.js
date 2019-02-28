@@ -12,8 +12,11 @@ function Photo(conf, i) {
 
 var fs = require('fs');
 
-var stdinBuffer = fs.readFileSync(0); // STDIN_FILENO = 0
-var [ N, ...lines ] = stdinBuffer.toString().split('\r\n');
+//var stdinBuffer = fs.readFileSync(0); // STDIN_FILENO = 0
+
+var stdinBuffer = fs.readFileSync('c_memorable_moments.txt');
+
+var [ N, ...lines ] = stdinBuffer.toString().split('\n');
 
 lines.pop();
 
@@ -21,11 +24,10 @@ var fotos = lines.map((l, idx) => new Photo(l.split(' '), idx));
 
 var fotoSeq = [], fotoSeqSet = new Set();
 
+let f1 = fotos[0];
 fotoSeqSet.add(fotos[0]);
 
-fotos.forEach((f1) => {
-    if (fotoSeqSet.has(f1)) return;
-
+while (true) {
     fotos.forEach((f2) => {
         let Sij = 0;
 
@@ -45,8 +47,13 @@ fotos.forEach((f1) => {
         }
     });
 
-    fotoSeqSet.add(f1.next);
-});
+    if (f1.next == null) {
+        break;
+    }
+
+    f1 = f1.next;
+    fotoSeqSet.add(f1);
+}
 
 let f = fotos[0];
 
